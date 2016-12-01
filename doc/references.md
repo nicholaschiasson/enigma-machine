@@ -7,6 +7,7 @@
 - https://learncryptography.com/history/the-enigma-machine
 - https://learncryptography.com/history/cracking-the-enigma-code
 - http://enigma.louisedade.co.uk/howitworks.html
+- http://codesandciphers.co.uk/enigma/steckercount.htm
 
 ## Breaking Enigma
 - https://en.wikipedia.org/wiki/Bombe
