@@ -18,6 +18,7 @@
 - http://web.archive.org/web/20060720040135/http://members.fortunecity.com/jpeschel/gillog1.htm
 - http://web.archive.org/web/20060720035430/http://members.fortunecity.com/jpeschel/erskin.htm
 - http://www.tandfonline.com/doi/abs/10.1080/0161-110091888745
+- http://www.ellsbury.com/bombe1.htm
 
 ## Examples
 - http://summersidemakerspace.ca/projects/enigma-machine/
