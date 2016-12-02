@@ -81,7 +81,7 @@ class Enigma:
             self.rotors[1].rotate()
         self.rotors[2].rotate()
 
-    def encrypt(self, word):
+    def run(self, word):
         plaintext = word.upper()
         cipher = ""
 
@@ -104,6 +104,12 @@ class Enigma:
         return cipher
 
 #Brief Testing
-enigma = Enigma(ringstellung='QDA', steckerverbindungen='PO ML IU KJ NH YT GB VF RE DC')
-print enigma.encrypt('ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ')
+encEnigma = Enigma(ringstellung='ADR', steckerverbindungen='AZ CI EJ KV NY OT PS')
+decEnigma = Enigma(ringstellung='ADR', steckerverbindungen='AZ CI EJ KV NY OT PS')
+ciphertext = encEnigma.run('HELLOWORLD')
+plaintext = decEnigma.run(ciphertext)
+
+print "Cipher Text: ", ciphertext
+print "Plain Text: ", plaintext
+
 
