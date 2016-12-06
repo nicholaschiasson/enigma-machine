@@ -10,6 +10,26 @@ class Reflector:
 class Rotor(Reflector):
     alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
+    @classmethod
+    def I(rotor):
+        return rotor('I',   'EKMFLGDQVZNTOWYHXUSPAIBRCJ', 'Q')
+
+    @classmethod
+    def II(rotor):
+        return rotor('II',  'AJDKSIRUXBLHWTMCQGZNPYFVOE', 'E')
+
+    @classmethod
+    def III(rotor):
+        return rotor('III', 'BDFHJLCPRTXVZNYEIWGAKMUSQO', 'V')
+
+    @classmethod
+    def IV(rotor):
+        return rotor('IV',  'ESOVPZJAYQUIRHXLNFTGKDCMWB', 'J')
+
+    @classmethod
+    def V(rotor):
+        return rotor('V',   'VZBRGITYUPSDNHLXAWMJQOFECK', 'J')
+
     def __init__(self, name, order, notch):
         Reflector.__init__(self, name, order)
         self.shift = 'A'
@@ -50,12 +70,18 @@ class PlugBoard:
 
 
 class Enigma:
-    def __init__(self, ringstellung=None, steckerverbindungen=None):
+    def __init__(self, walzenlage=None, ringstellung=None, steckerverbindungen=None):
         self.rotors = []
-        self.rotors.append(Rotor('I',   'EKMFLGDQVZNTOWYHXUSPAIBRCJ', 'Q'))
-        self.rotors.append(Rotor('II',  'AJDKSIRUXBLHWTMCQGZNPYFVOE', 'E'))
-        self.rotors.append(Rotor('III', 'BDFHJLCPRTXVZNYEIWGAKMUSQO', 'V'))
         self.reflector = Reflector('B', 'YRUHQSLDPXNGOKMIEBFZCWVJAT')
+
+        if walzenlage is not None:
+            self.rotors.append(walzenlage[0])
+            self.rotors.append(walzenlage[1])
+            self.rotors.append(walzenlage[2])
+        else:
+            self.rotors.append(Rotor.I())
+            self.rotors.append(Rotor.II())
+            self.rotors.append(Rotor.III())
 
         if steckerverbindungen is not None:
             self.steckerverbindungen = PlugBoard(steckerverbindungen)
@@ -104,12 +130,10 @@ class Enigma:
         return cipher
 
 #Brief Testing
-encEnigma = Enigma(ringstellung='ADR', steckerverbindungen='AZ CI EJ KV NY OT PS')
-decEnigma = Enigma(ringstellung='ADR', steckerverbindungen='AZ CI EJ KV NY OT PS')
+encEnigma = Enigma(walzenlage=(Rotor.II(), Rotor.I(), Rotor.V()), ringstellung='ADR', steckerverbindungen='AZ CI EJ KV NY OT PS')
+decEnigma = Enigma(walzenlage=(Rotor.II(), Rotor.I(), Rotor.V()), ringstellung='ADR', steckerverbindungen='AZ CI EJ KV NY OT PS')
 ciphertext = encEnigma.run('HELLOWORLD')
 plaintext = decEnigma.run(ciphertext)
 
 print "Cipher Text: ", ciphertext
 print "Plain Text: ", plaintext
-
-
