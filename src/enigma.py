@@ -28,7 +28,7 @@ class Rotor(Reflector):
 
     @classmethod
     def V(rotor):
-        return rotor('V',   'VZBRGITYUPSDNHLXAWMJQOFECK', 'J')
+        return rotor('V',   'VZBRGITYUPSDNHLXAWMJQOFECK', 'Z')
 
     def __init__(self, name, order, notch):
         Reflector.__init__(self, name, order)
@@ -154,7 +154,7 @@ decEnigma  = Enigma(walzenlage=(Rotor.IV(), Rotor.II(), Rotor.V()), ringstellung
 ciphertext = encEnigma.run(inStr)
 plaintext  = decEnigma.run(ciphertext)
 
-print "Cipher Text: HISSHJXCULMXNOTDHRAGBYPBHUMZJJIXZEUMSPDHOAWPVVBL"
+print "Cipher Text: HISSHJXCULMXNOTDHRAGBYPBHUMZJJIXZEUMSPDHOAWPVVBL" # answer
 print "Cipher Text:", ciphertext
 print "Plain  Text:", plaintext
 print "Plain  Text:", inStr
