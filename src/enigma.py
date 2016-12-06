@@ -32,15 +32,25 @@ class Rotor(Reflector):
 
     def __init__(self, name, order, notch):
         Reflector.__init__(self, name, order)
+        self.ring = 'A'
         self.shift = 'A'
         self.notch = notch
+
+    def set_ring(self, char):
+        ringDiff = (ord(char) - 65) - (ord(self.ring) - 65)
+        self.ring = char
+        n = len(self.order)
+        newOrder = self.order[(-ringDiff % n):] + self.order[:(-ringDiff % n)]
+        self.order = ""
+        for i in range(len(newOrder)):
+            self.order += chr((((ord(newOrder[i]) - 65) + ringDiff) % 26) + 65)
 
     def set_shift(self, char):
         self.shift = char
 
     def substitute(self, char):
-        letter = Reflector.substitute(self, chr((((ord(char) - 65) + (ord(self.shift) - 65)) % 26)+65))
-        return chr(65 + ((Rotor.alpha.index(letter) - (ord(self.shift) - 65)) % 26))
+        letter = Reflector.substitute(self, chr((((ord(char) - 65) + (ord(self.shift) - 65)) % 26) + 65))
+        return chr(((Rotor.alpha.index(letter) - (ord(self.shift) - 65)) % 26) + 65)
 
     def inverse(self, char):
         letter = chr(((Rotor.alpha.index(char) + (ord(self.shift) - 65)) % 26) + 65)
@@ -70,7 +80,7 @@ class PlugBoard:
 
 
 class Enigma:
-    def __init__(self, walzenlage=None, ringstellung=None, steckerverbindungen=None):
+    def __init__(self, walzenlage=None, ringstellung=None, steckerverbindungen=None, indicator=None):
         self.rotors = []
         self.reflector = Reflector('B', 'YRUHQSLDPXNGOKMIEBFZCWVJAT')
 
@@ -83,21 +93,29 @@ class Enigma:
             self.rotors.append(Rotor.II())
             self.rotors.append(Rotor.III())
 
+        if ringstellung is not None:
+            self.set_ringstellung(ringstellung)
+
         if steckerverbindungen is not None:
             self.steckerverbindungen = PlugBoard(steckerverbindungen)
         else:
             self.steckerverbindungen = PlugBoard('')
 
-        if ringstellung is not None:
-            self.set_ringstellung(ringstellung)
+        if indicator is not None:
+            self.set_indicator(indicator)
 
     def set_ringstellung(self, settings):
-        self.rotors[0].set_shift(settings[0])
-        self.rotors[1].set_shift(settings[1])
-        self.rotors[2].set_shift(settings[2])
+        self.rotors[0].set_ring(settings[0])
+        self.rotors[1].set_ring(settings[1])
+        self.rotors[2].set_ring(settings[2])
 
     def set_stecker(self, steckerverbindungen):
         self.steckerverbindungen = steckerverbindungen
+
+    def set_indicator(self, indicator):
+        self.rotors[0].set_shift(indicator[0])
+        self.rotors[1].set_shift(indicator[1])
+        self.rotors[2].set_shift(indicator[2])
 
     def advance_rotors(self):
         if self.rotors[1].step():
@@ -130,10 +148,13 @@ class Enigma:
         return cipher
 
 #Brief Testing
-encEnigma = Enigma(walzenlage=(Rotor.II(), Rotor.I(), Rotor.V()), ringstellung='ADR', steckerverbindungen='AZ CI EJ KV NY OT PS')
-decEnigma = Enigma(walzenlage=(Rotor.II(), Rotor.I(), Rotor.V()), ringstellung='ADR', steckerverbindungen='AZ CI EJ KV NY OT PS')
-ciphertext = encEnigma.run('HELLOWORLD')
-plaintext = decEnigma.run(ciphertext)
+inStr = "ABABCDCDEFEFGHIHIJKJKLMNOPQRQRSSTUTUVWWWWXXYZZZZ"
+encEnigma  = Enigma(walzenlage=(Rotor.IV(), Rotor.II(), Rotor.V()), ringstellung="LGY", steckerverbindungen="AJ BU DS FQ GX HN IV LO PR TY", indicator="GNI")
+decEnigma  = Enigma(walzenlage=(Rotor.IV(), Rotor.II(), Rotor.V()), ringstellung="LGY", steckerverbindungen="AJ BU DS FQ GX HN IV LO PR TY", indicator="GNI")
+ciphertext = encEnigma.run(inStr)
+plaintext  = decEnigma.run(ciphertext)
 
-print "Cipher Text: ", ciphertext
-print "Plain Text: ", plaintext
+print "Cipher Text: HISSHJXCULMXNOTDHRAGBYPBHUMZJJIXZEUMSPDHOAWPVVBL"
+print "Cipher Text:", ciphertext
+print "Plain  Text:", plaintext
+print "Plain  Text:", inStr
