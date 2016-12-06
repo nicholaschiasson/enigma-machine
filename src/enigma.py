@@ -148,13 +148,13 @@ class Enigma:
         return cipher
 
 #Brief Testing
-inStr = "ABABCDCDEFEFGHIHIJKJKLMNOPQRQRSSTUTUVWWWWXXYZZZZ"
-encEnigma  = Enigma(walzenlage=(Rotor.IV(), Rotor.II(), Rotor.V()), ringstellung="LGY", steckerverbindungen="AJ BU DS FQ GX HN IV LO PR TY", indicator="GNI")
-decEnigma  = Enigma(walzenlage=(Rotor.IV(), Rotor.II(), Rotor.V()), ringstellung="LGY", steckerverbindungen="AJ BU DS FQ GX HN IV LO PR TY", indicator="GNI")
-ciphertext = encEnigma.run(inStr)
-plaintext  = decEnigma.run(ciphertext)
+#inStr = "ABABCDCDEFEFGHIHIJKJKLMNOPQRQRSSTUTUVWWWWXXYZZZZ"
+#encEnigma  = Enigma(walzenlage=(Rotor.IV(), Rotor.II(), Rotor.V()), ringstellung="LGY", steckerverbindungen="AJ BU DS FQ GX HN IV LO PR TY", indicator="GNI")
+#decEnigma  = Enigma(walzenlage=(Rotor.IV(), Rotor.II(), Rotor.V()), ringstellung="LGY", steckerverbindungen="AJ BU DS FQ GX HN IV LO PR TY", indicator="GNI")
+#ciphertext = encEnigma.run(inStr)
+#plaintext  = decEnigma.run(ciphertext)
 
-print "Cipher Text: HISSHJXCULMXNOTDHRAGBYPBHUMZJJIXZEUMSPDHOAWPVVBL" # answer
-print "Cipher Text:", ciphertext
-print "Plain  Text:", plaintext
-print "Plain  Text:", inStr
+#print "Cipher Text: HISSHJXCULMXNOTDHRAGBYPBHUMZJJIXZEUMSPDHOAWPVVBL" # answer
+#print "Cipher Text:", ciphertext
+#print "Plain  Text:", plaintext
+#print "Plain  Text:", inStr
