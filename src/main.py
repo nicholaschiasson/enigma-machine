@@ -41,7 +41,7 @@ class EnigmaBreaker:
         indi = indicator if indicator is not None else self.best_indicator
         return Enigma(walzenlage=walz, ringstellung=ring, steckerverbindungen=stec, indicator=indi)
 
-    def break_walzenlage_and_indicator(self):
+    def break_without_ringstellung_and_plugboard(self):
         optimalIndicators = deque()
         for leftRot in range(1, 6):
             lRot = Rotors[leftRot]()
@@ -63,8 +63,8 @@ class EnigmaBreaker:
                                     optimalIndicators.appendleft(self.best_indicator)
         return optimalIndicators
 
-    def break_ringstellung(self):
-        optimalIndicators = self.break_walzenlage_and_indicator()
+    def break_without_plugboard(self):
+        optimalIndicators = self.break_without_ringstellung_and_plugboard()
         for optInd in optimalIndicators:
             midInd = optInd[1]
             rightInd = optInd[2]
@@ -78,8 +78,8 @@ class EnigmaBreaker:
                         self.best_ringstellung = ring
                         self.best_indicator = indi
 
-    def break_plugboard(self):
-        self.break_ringstellung()
+    def break_full(self):
+        self.break_without_plugboard()
         bgrams = UniqueBigrams()
         keepTrying = True
         while keepTrying:
@@ -101,42 +101,40 @@ class EnigmaBreaker:
                 del bgrams[stecCandidate[0]]
                 del bgrams[stecCandidate[1]]
 
-    def break_full(self):
-        self.break_plugboard()
+if __name__ == "__main__":
+    # Approximately 11 minutes to decipher this.
+    #cipherText = "NPNKANVHWKPXORCDDTRJRXSJFLCIUAIIBUNQIUQFTHLOZOIMENDNGPCB"
+    #eb = EnigmaBreaker(cipherText)
+    #start = time.clock()
+    #eb.break_full()
+    #end = time.clock()
+    #ne = eb.new_enigma()
+    #print "Cipher Text:        ", cipherText
+    #print "Walzenlage:         ", ne.rotors[0].name,  ne.rotors[1].name,  ne.rotors[2].name
+    #print "Indicator:          ", ne.rotors[0].shift, ne.rotors[1].shift, ne.rotors[2].shift
+    #print "Ringstellung:       ", ne.rotors[0].ring,  ne.rotors[1].ring,  ne.rotors[2].ring
+    #print "Steckerverbindungen:", eb.best_steckerverbindungen
+    #print "Plain Text:         ", ne.run(cipherText)
+    #print "Score:              ", eb.best_score
+    #print "Time:               ", (end - start)
 
-# Approximately 11 minutes to decipher this.
-#cipherText = "NPNKANVHWKPXORCDDTRJRXSJFLCIUAIIBUNQIUQFTHLOZOIMENDNGPCB"
-#eb = EnigmaBreaker(cipherText)
-#start = time.clock()
-#eb.break_full()
-#end = time.clock()
-#ne = eb.new_enigma()
-#print "Cipher Text:        ", cipherText
-#print "Walzenlage:         ", ne.rotors[0].name,  ne.rotors[1].name,  ne.rotors[2].name
-#print "Indicator:          ", ne.rotors[0].shift, ne.rotors[1].shift, ne.rotors[2].shift
-#print "Ringstellung:       ", ne.rotors[0].ring,  ne.rotors[1].ring,  ne.rotors[2].ring
-#print "Steckerverbindungen:", eb.best_steckerverbindungen
-#print "Plain Text:         ", ne.run(cipherText)
-#print "Score:              ", eb.best_score
-#print "Time:               ", (end - start)
+    longCipherText          = "CTSXBWMFIKEZWCOXYNFYOHAJAWGGBFJXBAYAWYNXCUUYYLGVSKDLNDHBKTFBLQPHGXUFKKWTCFNLDEJPKNQQFDMRRLNZVZQNXVLLWAVWQTUIYXVORZERRPMNAWJTPYVUYMIYIYHCSIZFQCMMVDWGAADBHOSJOPAVQWXEFAEMCXBQQUIVNJRUZAVQJDNRYHAKJMHVUJQFAAWYFQHKSFUYPPGFCDXIQVGFUZTFMLZKAPOPIHEOOVKKTMACIJNICFJFQQHJEUDBEJVNIFTYRSRCQVPMOMDIILFIALJZJEAFFDVHOPJKLWJFTVUHMQWUKYCNJXMHZQJVFGOGFQEVPDTQIIZURETCFKDJQTXPRUSGKWVNPPVHWQIXFFUDPHXWNKMDLULZEIODGRQARSIXPUTEUDIQEKXUQGJCIKFOSBLYJIYUBZHYRJQRGIMRMVRNLSHGBRWCBEDTDGEZPJFDDRKAYVJPOLSHWNMXUKYKVFRFTMYSOCTZOAEPKBYQIRAWABHRDUYMWJRXQWMRTIWNNBWUNRJJBZWIBWWGTSXYIAEHHWQXIJUJMIYZRWADCTJUQLWYDZOPHQIE"
+    longPlainText           = "HOWDOYOUTHINKIAMGOINGTOGETALONGWITHOUTYOUWHENYOUAREGONEYOUTOOKMEFOREVERYTHINGTHATIHADANDKICKEDMEOUTONMYOWNAREYOUHAPPYAREYOUSATISFIEDHOWLONGCANYOUSTANDTHEHEATOUTOFTHEDOORWAYTHEBULLETSRIPTOTHESOUNDOFTHEBEATANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUSTHOWDOYOUTHINKIAMGOINGTOGETALONGWITHOUTYOUWHENYOUAREGONEYOUTOOKMEFOREVERYTHINGTHATIHADANDKICKEDMEOUTONMYOWNAREYOUHAPPYAREYOUSATISFIEDHOWLONGCANYOUSTANDTHEHEATOUTOFTHEDOORWAYTHEBULLETSRIPTOTHESOUNDOFTHEBEATANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUST"
+    walzenlageUsed          = (Rotor.III(), Rotor.V(), Rotor.I())
+    ringstellungUsed        = "WFP"
+    steckerverbindungenUsed = "AC EI FW GM JT LP QY"
+    indicatorUsed           = "FPM"
 
-longCipherText          = "CTSXBWMFIKEZWCOXYNFYOHAJAWGGBFJXBAYAWYNXCUUYYLGVSKDLNDHBKTFBLQPHGXUFKKWTCFNLDEJPKNQQFDMRRLNZVZQNXVLLWAVWQTUIYXVORZERRPMNAWJTPYVUYMIYIYHCSIZFQCMMVDWGAADBHOSJOPAVQWXEFAEMCXBQQUIVNJRUZAVQJDNRYHAKJMHVUJQFAAWYFQHKSFUYPPGFCDXIQVGFUZTFMLZKAPOPIHEOOVKKTMACIJNICFJFQQHJEUDBEJVNIFTYRSRCQVPMOMDIILFIALJZJEAFFDVHOPJKLWJFTVUHMQWUKYCNJXMHZQJVFGOGFQEVPDTQIIZURETCFKDJQTXPRUSGKWVNPPVHWQIXFFUDPHXWNKMDLULZEIODGRQARSIXPUTEUDIQEKXUQGJCIKFOSBLYJIYUBZHYRJQRGIMRMVRNLSHGBRWCBEDTDGEZPJFDDRKAYVJPOLSHWNMXUKYKVFRFTMYSOCTZOAEPKBYQIRAWABHRDUYMWJRXQWMRTIWNNBWUNRJJBZWIBWWGTSXYIAEHHWQXIJUJMIYZRWADCTJUQLWYDZOPHQIE"
-longPlainText           = "HOWDOYOUTHINKIAMGOINGTOGETALONGWITHOUTYOUWHENYOUAREGONEYOUTOOKMEFOREVERYTHINGTHATIHADANDKICKEDMEOUTONMYOWNAREYOUHAPPYAREYOUSATISFIEDHOWLONGCANYOUSTANDTHEHEATOUTOFTHEDOORWAYTHEBULLETSRIPTOTHESOUNDOFTHEBEATANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUSTHOWDOYOUTHINKIAMGOINGTOGETALONGWITHOUTYOUWHENYOUAREGONEYOUTOOKMEFOREVERYTHINGTHATIHADANDKICKEDMEOUTONMYOWNAREYOUHAPPYAREYOUSATISFIEDHOWLONGCANYOUSTANDTHEHEATOUTOFTHEDOORWAYTHEBULLETSRIPTOTHESOUNDOFTHEBEATANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUST"
-walzenlageUsed          = (Rotor.III(), Rotor.V(), Rotor.I())
-ringstellungUsed        = "WFP"
-steckerverbindungenUsed = "AC EI FW GM JT LP QY"
-indicatorUsed           = "FPM"
-
-eb = EnigmaBreaker(longCipherText)
-start = time.clock()
-eb.break_full()
-end = time.clock()
-ne = eb.new_enigma()
-print "Cipher Text:        ", longCipherText
-print "Walzenlage:         ", ne.rotors[0].name,  ne.rotors[1].name,  ne.rotors[2].name
-print "Indicator:          ", ne.rotors[0].shift, ne.rotors[1].shift, ne.rotors[2].shift
-print "Ringstellung:       ", ne.rotors[0].ring,  ne.rotors[1].ring,  ne.rotors[2].ring
-print "Steckerverbindungen:", eb.best_steckerverbindungen
-print "Plain Text:         ", ne.run(longCipherText)
-print "Score:              ", eb.best_score
-print "Time:               ", (end - start)
+    eb = EnigmaBreaker(longCipherText)
+    start = time.clock()
+    eb.break_full()
+    end = time.clock()
+    ne = eb.new_enigma()
+    print "Cipher Text:        ", longCipherText
+    print "Walzenlage:         ", ne.rotors[0].name,  ne.rotors[1].name,  ne.rotors[2].name
+    print "Indicator:          ", ne.rotors[0].shift, ne.rotors[1].shift, ne.rotors[2].shift
+    print "Ringstellung:       ", ne.rotors[0].ring,  ne.rotors[1].ring,  ne.rotors[2].ring
+    print "Steckerverbindungen:", eb.best_steckerverbindungen
+    print "Plain Text:         ", ne.run(longCipherText)
+    print "Score:              ", eb.best_score
+    print "Time:               ", (end - start)
