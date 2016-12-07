@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from collections import deque
 import time
 from english_fitness_statistics.ngram_score import ngram_score as ns
@@ -91,26 +93,21 @@ class EnigmaBreaker:
 
     def break_full(self):
         self.break_without_plugboard()
-        bgrams = UniqueBigrams()
-        keepTrying = True
-        while keepTrying:
-            keepTrying = False
-            stecCandidate = ""
-            for c in range(ord("A"), ord("Z") + 1):
-                l = chr(c)
-                if l in bgrams:
-                    for r in bgrams[l]:
-                        if r in bgrams:
-                            stec = (self.best_steckerverbindungen + " " + l + r).strip()
-                            score = self.ngram.score(self.new_enigma(steckerverbindungen=stec).run(self.cipher))
-                            if score > self.best_score:
-                                keepTrying = True
-                                self.best_score = score
-                                stecCandidate = l + r
-            if (keepTrying):
-                self.best_steckerverbindungen = (self.best_steckerverbindungen + " " + stecCandidate).strip()
-                del bgrams[stecCandidate[0]]
-                del bgrams[stecCandidate[1]]
+        for l in range(26):
+            lchr = chr(l + 65)
+            s = lchr + ": "
+            for r in range(1, 26 - l):
+                rchr = chr(r + 65 + l)
+                stec = ""
+                for p in self.best_steckerverbindungen.split():
+                    if lchr not in p and rchr not in p:
+                        stec = (stec + " " + p).strip()
+                stec = (stec + " " + lchr + rchr).strip()
+                score = self.ngram.score(self.new_enigma(steckerverbindungen=stec).run(self.cipher))
+                if score > self.best_score:
+                    self.best_score = score
+                    self.best_steckerverbindungen = stec
+                    break
 
 def test():
     # Approximately 11 minutes to decipher this.
@@ -129,8 +126,8 @@ def test():
     #print "Score:              ", eb.best_score
     #print "Time:               ", (end - start)
 
-    longCipherText          = "CJSXBXMFQKEZWCOXQNFQOUATAGGFBFTXBWQAWDFXCUUQQLGVSKDPNDHNKJABPYLHGXUFKKWXQFNPDFTLCNYYFDMRRPNZVZYNXVMPWAWWYJUIQPVORZVKKLMNHWTJLEVUQMIQIQHSSIZFYCNMVDSGAAQBHOSTSLAPYWKEFAEMCXBQLUIVNQMUKAVYIINWQHAKTMHVUJYFAAWVFYHCSFUQLLGFGDXZYVGFUIJFMMZKALOLIHHOOMKKJMADITNDCFTFYYHTPUDQETVNILJQRVRCYVLMOMIIIFFIAPTF"
-    longPlainText           = "HOWDOYOUTHINKIAMGOINGTOGETALONGWITHOUTYOUWHENYOUAREGONEYOUTOOKMEFOREVERYTHINGTHATIHADANDKICKEDMEOUTONMYOWNAREYOUHAPPYAREYOUSATISFIEDHOWLONGCANYOUSTANDTHEHEATOUTOFTHEDOORWAYTHEBULLETSRIPTOTHESOUNDOFTHEBEATANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUSTANOTHERONEBITESTHEDUST"
+    longCipherText          = "PVUKORVJDUEQVNTAMIRGNIBLOFVGDTPEVBLCGDLYDDCVQMDGCYPVAQKUWNTPJBUAZQDABYKVDJMSAJDMYBQTKYYIZYEGTEEDUDXWTSKRJUNKJKHUYNGBEQFQJSHJEBTQXYLEPMJWJMXXTDVNFGHNKMIFWXYFBLKFXAMILOHKSENKEFHTIDZQXJINCYYJMCNPCIUVJUSABOLOYUXIHESCGLKMBXELALCMECQRXGWVHKVMOTDOGACKPOQIMDJLMFBVAVUTRCFWVTMTIQCKKHBJEWONWRCEXMLALFMLMONLLPGZAJSITQIJLJXZCIWLXAPFGVWIXGRPNWIFWTREWLKBASINMFFVFSNULPQLFDLRPWJSTENSKPJORSB"
+    longPlainText           = "OCTOBERARRIVEDSPREADINGADAMPCHILLOVERTHEGROUNDSANDINTOTHECASTLEMADAMPOMFREYTHENURSEWASKEPTBUSYBYASUDDENSPATEOFCOLDSAMONGTHESTAFFANDSTUDENTSHERPEPPERUPPOTIONWORKEDINSTANTLYTHOUGHITLEFTTHEDRINKERSMOKINGATTHEEARSFORSEVERALHOURSAFTERWARDGINNYWEASLEYWHOHADBEENLOOKINGPALEWASBULLIEDINTOTAKINGSOMEBYPERCYTHESTEAMPOURINGFROMUNDERHERVIVIDHAIRGAVETHEIMPRESSIONTHATHERWHOLEHEADWASONFIRE"
     walzenlageUsed          = (Rotor.III(), Rotor.V(), Rotor.I())
     ringstellungUsed        = "WFP"
     steckerverbindungenUsed = "AC EI FW GM"
